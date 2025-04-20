@@ -64,27 +64,16 @@
       e.preventDefault();
       const form = e.target;
       const data = new FormData(form);
-      const message = `🔧 Новая заявка с сайта AutoPoint.kz:%0A` +
-        `• VIN: ${data.get('vin')}%0A` +
-        `• Название запчасти: ${data.get('partName')}%0A` +
-        `• Автомобиль: ${data.get('carModel')} (${data.get('carYear')})%0A` +
-        `• Артикул: ${data.get('article') || '—'}%0A` +
+      const message = `🔧 Новая заявка с сайта AutoPoint.kz:\n` +
+        `• VIN: ${data.get('vin')}\n` +
+        `• Название запчасти: ${data.get('partName')}\n` +
+        `• Автомобиль: ${data.get('carModel')} (${data.get('carYear')})\n` +
+        `• Артикул: ${data.get('article') || '—'}\n` +
         `• Телефон: ${data.get('phone')}`;
 
-      const url = 'https://script.google.com/macros/s/AKfycbyCm-JM2F-IP8lFnSa3LMpuLydQYQG1ZNcsX6KHBzDwRHtIsPIcV57Nr5uRTTY3y5rHVQ/exec';
-      const params = new URLSearchParams();
-      params.append("text", message);
-
-      fetch(url + "?" + params.toString())
-        .then(response => {
-          if (response.ok) {
-            alert("Заявка успешно отправлена!");
-            form.reset();
-          } else {
-            alert("Ошибка при отправке заявки.");
-          }
-        })
-        .catch(() => alert("Ошибка соединения."));
+      const phoneNumber = '7777722289';
+      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
     }
   </script>
 </body>
