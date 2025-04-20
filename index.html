@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -49,7 +48,7 @@
   <!-- Quick Request Form -->
   <section id="quick-request" class="px-8 py-16 bg-white/5">
     <h3 class="text-2xl font-semibold mb-6">Быстрая заявка</h3>
-    <form id="requestForm" class="grid gap-4 max-w-xl" onsubmit="sendTelegramMessage(event)">
+    <form id="requestForm" class="grid gap-4 max-w-xl" onsubmit="submitForm(event)">
       <input type="text" placeholder="VIN номер" name="vin" required class="px-4 py-2 rounded-lg bg-white/10 text-white placeholder-white/70" />
       <input type="text" placeholder="Название запчасти" name="partName" required class="px-4 py-2 rounded-lg bg-white/10 text-white placeholder-white/70" />
       <input type="text" placeholder="Марка и модель автомобиля" name="carModel" required class="px-4 py-2 rounded-lg bg-white/10 text-white placeholder-white/70" />
@@ -61,29 +60,29 @@
   </section>
 
   <script>
-    function sendTelegramMessage(e) {
+    function submitForm(e) {
       e.preventDefault();
       const form = e.target;
       const data = new FormData(form);
-      const message = `📩 Новая заявка:
-
-🔹 VIN: ${data.get('vin')}
-🔹 Запчасть: ${data.get('partName')}
-🔹 Авто: ${data.get('carModel')}
-🔹 Год: ${data.get('carYear')}
-🔹 Артикул: ${data.get('article') || 'Не указан'}
-🔹 Телефон: ${data.get('phone')}`;
+      const message = `
+🔧 Новая заявка с сайта AutoPoint.kz:
+• VIN: ${data.get('vin')}
+• Название запчасти: ${data.get('partName')}
+• Автомобиль: ${data.get('carModel')} (${data.get('carYear')})
+• Артикул: ${data.get('article') || '—'}
+• Телефон: ${data.get('phone')}`;
 
       fetch(`https://api.telegram.org/bot7772326378:AAEvIqPBTOC-7RH7C41ks61fdUzFPgfSy40/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           chat_id: '472270759',
-          text: message
+          text: message,
+          parse_mode: 'Markdown'
         })
       })
-      .then(res => res.ok ? alert('Заявка отправлена!') : alert('Ошибка отправки'))
-      .catch(() => alert('Ошибка соединения'));
+      .then(res => res.ok ? alert("Заявка успешно отправлена!") : alert("Ошибка при отправке"))
+      .catch(err => alert("Ошибка соединения"));
 
       form.reset();
     }
