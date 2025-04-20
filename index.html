@@ -1,1 +1,92 @@
 
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoPoint.kz</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-b from-gray-900 to-blue-900 text-white font-sans scroll-smooth">
+  <!-- Header -->
+  <header class="flex items-center justify-between px-8 py-6 border-b border-white/10">
+    <h1 class="text-2xl font-bold">AutoPoint.kz</h1>
+    <nav class="space-x-6 text-sm">
+      <a href="#catalog" class="hover:text-orange-500">Каталог</a>
+      <a href="#delivery" class="hover:text-orange-500">Доставка</a>
+      <a href="#offers" class="hover:text-orange-500">Спецпредложения</a>
+      <a href="#contacts" class="hover:text-orange-500">Контакты</a>
+    </nav>
+    <div class="flex items-center space-x-4">
+      <button><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" /></svg></button>
+      <button><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A10.97 10.97 0 0112 15c2.475 0 4.738.81 6.879 2.165M15 10a3 3 0 11-6 0 3 3 0 016 0z" /></svg></button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="px-8 py-16 flex flex-col md:flex-row items-center justify-between">
+    <div class="max-w-xl">
+      <h2 class="text-4xl md:text-5xl font-extrabold leading-tight">АВТОЗАПЧАСТИ <br />И АВТОАКСЕССУАРЫ</h2>
+      <p class="mt-4 text-orange-400 text-lg">Широкий ассортимент для вашего автомобиля</p>
+      <div class="mt-6 flex">
+        <input type="text" placeholder="Поиск по каталогу" class="w-full md:w-96 px-4 py-2 rounded-l-lg bg-white/10 text-white placeholder-white/70 focus:outline-none" />
+        <button class="px-6 py-2 bg-orange-500 text-white font-semibold rounded-r-lg hover:bg-orange-600">НАЙТИ</button>
+      </div>
+    </div>
+    <div class="mt-12 md:mt-0">
+      <img src="images/brake-disc.png" alt="Автозапчасти" class="w-80 h-auto" />
+    </div>
+  </section>
+
+  <!-- Popular Products Section -->
+  <section id="catalog" class="px-8 py-12">
+    <h3 class="text-2xl font-semibold mb-6">Популярные товары</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <!-- Products omitted for brevity -->
+    </div>
+  </section>
+
+  <!-- Quick Request Form -->
+  <section id="quick-request" class="px-8 py-16 bg-white/5">
+    <h3 class="text-2xl font-semibold mb-6">Быстрая заявка</h3>
+    <form id="requestForm" class="grid gap-4 max-w-xl" onsubmit="sendTelegramMessage(event)">
+      <input type="text" placeholder="VIN номер" name="vin" required class="px-4 py-2 rounded-lg bg-white/10 text-white placeholder-white/70" />
+      <input type="text" placeholder="Название запчасти" name="partName" required class="px-4 py-2 rounded-lg bg-white/10 text-white placeholder-white/70" />
+      <input type="text" placeholder="Марка и модель автомобиля" name="carModel" required class="px-4 py-2 rounded-lg bg-white/10 text-white placeholder-white/70" />
+      <input type="text" placeholder="Год автомобиля" name="carYear" required class="px-4 py-2 rounded-lg bg-white/10 text-white placeholder-white/70" />
+      <input type="text" placeholder="Артикул (необязательно)" name="article" class="px-4 py-2 rounded-lg bg-white/10 text-white placeholder-white/70" />
+      <input type="tel" placeholder="Телефон" name="phone" required class="px-4 py-2 rounded-lg bg-white/10 text-white placeholder-white/70" />
+      <button type="submit" class="mt-4 w-full bg-orange-500 hover:bg-orange-600 py-2 rounded-lg text-white font-medium">ОТПРАВИТЬ</button>
+    </form>
+  </section>
+
+  <script>
+    function sendTelegramMessage(e) {
+      e.preventDefault();
+      const form = e.target;
+      const data = new FormData(form);
+      const message = `📩 Новая заявка:
+
+🔹 VIN: ${data.get('vin')}
+🔹 Запчасть: ${data.get('partName')}
+🔹 Авто: ${data.get('carModel')}
+🔹 Год: ${data.get('carYear')}
+🔹 Артикул: ${data.get('article') || 'Не указан'}
+🔹 Телефон: ${data.get('phone')}`;
+
+      fetch(`https://api.telegram.org/bot7772326378:AAEvIqPBTOC-7RH7C41ks61fdUzFPgfSy40/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: '472270759',
+          text: message
+        })
+      })
+      .then(res => res.ok ? alert('Заявка отправлена!') : alert('Ошибка отправки'))
+      .catch(() => alert('Ошибка соединения'));
+
+      form.reset();
+    }
+  </script>
+</body>
+</html>
