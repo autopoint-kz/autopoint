@@ -64,27 +64,27 @@
       e.preventDefault();
       const form = e.target;
       const data = new FormData(form);
-      const message = `
-🔧 Новая заявка с сайта AutoPoint.kz:
-• VIN: ${data.get('vin')}
-• Название запчасти: ${data.get('partName')}
-• Автомобиль: ${data.get('carModel')} (${data.get('carYear')})
-• Артикул: ${data.get('article') || '—'}
-• Телефон: ${data.get('phone')}`;
+      const message = `🔧 Новая заявка с сайта AutoPoint.kz:%0A` +
+        `• VIN: ${data.get('vin')}%0A` +
+        `• Название запчасти: ${data.get('partName')}%0A` +
+        `• Автомобиль: ${data.get('carModel')} (${data.get('carYear')})%0A` +
+        `• Артикул: ${data.get('article') || '—'}%0A` +
+        `• Телефон: ${data.get('phone')}`;
 
-      fetch(`https://api.telegram.org/bot7772326378:AAEvIqPBTOC-7RH7C41ks61fdUzFPgfSy40/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: '472270759',
-          text: message,
-          parse_mode: 'Markdown'
+      const url = 'https://script.google.com/macros/s/AKfycbyCm-JM2F-IP8lFnSa3LMpuLydQYQG1ZNcsX6KHBzDwRHtIsPIcV57Nr5uRTTY3y5rHVQ/exec';
+      const params = new URLSearchParams();
+      params.append("text", message);
+
+      fetch(url + "?" + params.toString())
+        .then(response => {
+          if (response.ok) {
+            alert("Заявка успешно отправлена!");
+            form.reset();
+          } else {
+            alert("Ошибка при отправке заявки.");
+          }
         })
-      })
-      .then(res => res.ok ? alert("Заявка успешно отправлена!") : alert("Ошибка при отправке"))
-      .catch(err => alert("Ошибка соединения"));
-
-      form.reset();
+        .catch(() => alert("Ошибка соединения."));
     }
   </script>
 </body>
